@@ -1,0 +1,4 @@
+target/
+.idea/
+dev.env
+.DS_Store

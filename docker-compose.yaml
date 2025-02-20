@@ -1,0 +1,20 @@
+services:
+  openig:
+    image: openidentityplatform/openig:latest
+    container_name: openig
+    volumes:
+      - ./openig-config:/usr/local/openig-config:ro
+    environment:
+      CATALINA_OPTS: -Dopenig.base=/usr/local/openig-config -Doauth.client_id=<client_id> -Doauth.client_secret=<client_secret> -DallowedEmails=ivan.ivanov@yandex.ru -Dendpoint.app=http://app:8080      
+    # env_file:
+    #     - dev.env        
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+
+  app:
+    image: test-web-server
+    build: ./test-web-server
+    # ports:
+    #   - "8081:8080"
+        

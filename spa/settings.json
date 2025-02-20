@@ -1,0 +1,6 @@
+{
+    "client_id": "3dfaff59fffb434d938f11e9d19f8b1a",
+    "auth_url": "https://oauth.yandex.ru/authorize",
+    "token_url": "https://oauth.yandex.ru/token",
+    "scope": "login:email"
+}

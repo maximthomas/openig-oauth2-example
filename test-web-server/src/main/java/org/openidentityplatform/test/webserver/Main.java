@@ -12,6 +12,8 @@ import java.util.Base64;
 public class Main {
 
     final static HttpHandler mainHandler = (exchange -> {
+        Logger.getLogger(JBossLoggingAccessLogReceiver.DEFAULT_CATEGORY).info(exchange.getRequestHeaders());
+
         String email = "undefined";
         String authJwt = exchange.getRequestHeaders().getFirst("Authorization");
         
@@ -22,8 +24,7 @@ public class Main {
                 email = payload.replaceAll(".*email\\\":\"(.*?)\".*", "$1");
             }
         }
-        
-        Logger.getLogger(JBossLoggingAccessLogReceiver.DEFAULT_CATEGORY).info(exchange.getRequestHeaders());
+
         exchange.getResponseHeaders().add(new HttpString("Content-Type"), "application/json");
         String responseBody = "{\"email\": \"%s\"}\n".formatted(email);
         exchange.getResponseSender().send(responseBody);

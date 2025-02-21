@@ -1,0 +1,33 @@
+{
+  "heap": [],
+  "handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "ProtectedResourceFilter",
+          "type": "OAuth2ResourceServerFilter",
+          "config": {
+            "providerHandler": "ClientHandler",
+            "scopes": [
+              "email",
+              "profile"
+            ],
+            "tokenInfoEndpoint": "https://openam.example.com:8443/openam/oauth2/tokeninfo",
+            "cacheExpiration": "2 minutes"
+          }
+        }
+      ],
+      "handler": {
+        "name": "UserInfoHandler",
+        "type":"StaticResponseHandler",
+        "config": {
+           "status": 200,
+           "entity": "{}"
+        }
+      }
+    }
+  },
+  "condition": "${matches(request.uri.path, '^/userinfo')}",
+  "baseURI": "http://openig.example.org:8080"
+}

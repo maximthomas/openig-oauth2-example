@@ -47,30 +47,30 @@
           }
         },
         {
-          "name": "AccessTokenEnrichFilter",
-          "type": "ScriptableFilter",
+          "type": "HeaderFilter",
           "config": {
-            "type": "application/x-groovy",
-            "file": "accessToken.groovy",
-            "args": {
-              "accessToken": "${attributes.access_token}"
-            }
-          }
-        },
-        {
-          "type": "StaticRequestFilter",
-          "config": {
-            "method": "GET",
-            "uri": "https://login.yandex.ru/info",
-            "headers": {
+            "messageType": "REQUEST",
+            "add": {
               "Authorization": [
-                "OAuth ${attributes.access_token.access_token}"
+                "${attributes.access_token.access_token}"
               ]
             }
           }
         }
       ],
-      "handler": "ClientHandler"
+      "handler": {
+        "name": "EndpointHandler",
+        "type": "DispatchHandler",
+        "config": {
+          "bindings": [
+            {
+              "handler": "ClientHandler",
+              "capture": "all",
+              "baseURI": "${system['endpoint.app']}"
+            }
+          ]
+        }
+      }
     }
   },
   "condition": "${matches(request.uri.path, '^/oauth')}",

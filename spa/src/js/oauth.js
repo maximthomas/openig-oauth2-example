@@ -21,7 +21,7 @@ function generateCodeChallenge(codeVerifier) {
 async function getOAuthSettings() {
     let settings = sessionStorage.getItem("oauth2.settings")
     if(!settings) {
-        const response = await fetch('settings.json');
+        const response = await fetch('data/settings.json');
         settings = await response.json();        
     } 
     console.log('OAuth2 Settings:', settings);
@@ -40,7 +40,7 @@ async function startPKCEFlow() {
     const authParams = new URLSearchParams({
         client_id: settings.client_id,
         response_type: 'code',
-        redirect_uri: 'http://openig.example.org:8080/oauth/callback',
+        redirect_uri: settings.callback_url,
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         scope: settings.scope,
@@ -53,7 +53,7 @@ async function startPKCEFlow() {
 }
 
 // Handle callback (after redirect)
-async function handleCallback() {
+async function handleCallback(successCallback) {
     const settings = await getOAuthSettings();
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -69,12 +69,12 @@ async function handleCallback() {
             client_id: settings.client_id,
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: 'http://openig.example.org:8080/oauth/callback',
+            redirect_uri: settings.callback_url,
             code_verifier: codeVerifier
         });
 
         try {
-            const response = await fetch(settings.toktoken_url, {
+            const response = await fetch(settings.token_url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -84,6 +84,10 @@ async function handleCallback() {
 
             const tokenData = await response.json();
             console.log('Access Token:', tokenData.access_token);
+            if(successCallback) {
+                successCallback(tokenData.access_token);
+            } 
+            
             // Handle tokens (store securely, etc.)
         } catch (error) {
             console.error('Token exchange failed:', error);
@@ -91,10 +95,22 @@ async function handleCallback() {
     }
 }
 
-// Usage example
-document.getElementById('loginButton')?.addEventListener('click', startPKCEFlow);
+async function fetchProfileData(token) {
+    const settings = await getOAuthSettings();
 
-// Check if this is the callback
-if (window.location.search.includes('code=')) {
-    handleCallback();
+    const response = await fetch(settings.profile_url, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        }
+    });    
+    if(response.ok) {
+        const profileData = await response.json();
+        console.log('Profile: ', profileData);
+        return profileData;
+    }
+    return null;  
 }
+
+
+

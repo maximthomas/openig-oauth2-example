@@ -6,18 +6,13 @@ function generateRandomString(length) {
     ).join('');
 }
 
-function base64UrlEncode(arrayBuffer) {
-    return btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)))
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-}
 
 function generateCodeChallenge(codeVerifier) {
     const hash = CryptoJS.SHA256(codeVerifier);
-    const base64Hash = CryptoJS.enc.Base64.stringify(hash);
-    return base64UrlEncode(base64Hash);
+    const base64Hash = CryptoJS.enc.Base64url.stringify(hash);
+    return base64Hash;
 }
+
 async function getOAuthSettings() {
     let settings = sessionStorage.getItem("oauth2.settings")
     if(!settings) {
@@ -41,7 +36,7 @@ async function startPKCEFlow() {
         client_id: settings.client_id,
         response_type: 'code',
         redirect_uri: settings.callback_url,
-        code_challenge: codeChallenge,
+        // code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         scope: settings.scope,
         state: generateRandomString(16)

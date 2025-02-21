@@ -1,8 +1,8 @@
 // Usage example
-//document.getElementById('loginButton')?.addEventListener('click', startPKCEFlow);
-document.getElementById('loginButton')?.addEventListener('click', function() {
-    successCallback("test_token");
-});
+document.getElementById('loginButton')?.addEventListener('click', startPKCEFlow);
+// document.getElementById('loginButton')?.addEventListener('click', function() {
+//     successCallback("test_token");
+// });
 
 async function successCallback(token) {
     document.getElementById('login').style.display = 'none';

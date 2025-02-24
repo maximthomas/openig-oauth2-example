@@ -8,13 +8,32 @@
           "name": "ProtectedResourceFilter",
           "type": "OAuth2ResourceServerFilter",
           "config": {
+            "accessTokenResolver": {
+              "type": "ScriptableAccessTokenResolver",
+              "config": {
+                "type": "application/x-groovy",
+                "file": "ResolveAccessToken.groovy",
+                
+                "args": {
+                  "userInfoUri": "https://login.yandex.ru/info?format=jwt"
+                }
+              }
+            },
+            "requireHttps": false,
             "providerHandler": "ClientHandler",
-            "scopes": [
-              "email",
-              "profile"
-            ],
-            "tokenInfoEndpoint": "https://openam.example.com:8443/openam/oauth2/tokeninfo",
+            "scopes": [],
             "cacheExpiration": "2 minutes"
+          }
+        },
+        {
+          "name": "AuthorizationFilter",
+          "type": "ScriptableFilter",
+          "config": {
+            "type": "application/x-groovy",
+            "file": "policy.groovy",
+            "args": {
+              "allowedEmails": "${system.allowedEmails}"
+            }
           }
         }
       ],
@@ -23,7 +42,7 @@
         "type":"StaticResponseHandler",
         "config": {
            "status": 200,
-           "entity": "{}"
+           "entity": "<h1>Authenticated with </h2>"
         }
       }
     }

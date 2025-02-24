@@ -9,19 +9,13 @@ def getUnatuhorizedResponse() {
     ])    
     return response;
 }
-
-def sjwt = new JwtBuilderFactory().reconstruct(session.userInfo, SignedJwt.class);
-
-if ((sjwt.getClaimsSet().getExpirationTime() !=null && sjwt.getClaimsSet().getExpirationTime().before(new Date()))) {
-    logger.warn("jwt expired " + jwt.getClaimsSet().getExpirationTime());
-    session.userInfo = null
-    return getUnatuhorizedResponse() 
-}
+def accessTokenInfo = contexts['oauth2'].accessToken.info
+logger.info("" + accessTokenInfo)
 
 if(allowedEmails != null) {
     def allowedEmailSet = allowedEmails.split(',').toList().toSet()
-    if(!allowedEmailSet.contains(sjwt.getClaimsSet().getClaim("email"))) {
-        logger.warn("email " + sjwt.getClaimsSet().getClaim("email") + " is not in allowed email list: " + allowedEmailSet)
+    if(!allowedEmailSet.contains(accessTokenInfo['email'])) {
+        logger.warn("email " + accessTokenInfo['email'] + " is not in allowed email list: " + allowedEmailSet)
         return getUnatuhorizedResponse() 
     }
 }

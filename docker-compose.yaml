@@ -1,6 +1,8 @@
 services:
   openig:
-    image: openidentityplatform/openig:latest
+    #image: openidentityplatform/openig:latest
+    image: openig-test:latest
+    build: ./openig
     container_name: openig
     volumes:
       - ./openig-config:/usr/local/openig-config:ro

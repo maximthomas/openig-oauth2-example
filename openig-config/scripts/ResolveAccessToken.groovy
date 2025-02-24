@@ -1,5 +1,4 @@
 import org.forgerock.http.oauth2.AccessTokenInfo
-import org.forgerock.http.protocol.Request
 import org.forgerock.json.JsonValue
 
 import org.forgerock.json.jose.builders.JwtBuilderFactory

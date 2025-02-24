@@ -30,7 +30,7 @@
           "type": "OAuth2ClientFilter",
           "config": {
             "clientEndpoint": "/oauth",
-            "defaultLoginGoto": "/service",
+            "defaultLoginGoto": "/oauth",
             "requireHttps": false,
             "requireLogin": true,
             "target": "${attributes.access_token}",

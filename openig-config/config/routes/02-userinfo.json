@@ -30,7 +30,7 @@
           "type": "ScriptableFilter",
           "config": {
             "type": "application/x-groovy",
-            "file": "policy.groovy",
+            "file": "Policy.groovy",
             "args": {
               "allowedEmails": "${system.allowedEmails}"
             }
@@ -42,7 +42,7 @@
         "type":"StaticResponseHandler",
         "config": {
            "status": 200,
-           "entity": "<h1>Authenticated with </h2>"
+           "entity": "{\"email\": \"${contexts['oauth2'].accessToken.info['email']}\", \"balance\": 10000 }"
         }
       }
     }

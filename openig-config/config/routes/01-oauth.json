@@ -52,7 +52,7 @@
             "messageType": "REQUEST",
             "add": {
               "Authorization": [
-                "${attributes.access_token.access_token}"
+                "Bearer ${attributes.access_token.access_token}"
               ]
             }
           }

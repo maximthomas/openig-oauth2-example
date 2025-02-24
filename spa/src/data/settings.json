@@ -1,8 +1,0 @@
-{
-    "client_id": "3dfaff59fffb434d938f11e9d19f8b1a",
-    "callback_url": "http://openig.example.org:8080/spa",
-    "auth_url": "https://oauth.yandex.ru/authorize",
-    "token_url": "https://oauth.yandex.ru/token",
-    "profile_url": "data/profile.json",
-    "scope": "login:email"
-}

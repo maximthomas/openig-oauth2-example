@@ -9,6 +9,12 @@ def getUnatuhorizedResponse() {
     ])    
     return response;
 }
+
+if(contexts['oauth2'] == null) {
+    logger.warn("there is no access token in the request")
+    return getUnatuhorizedResponse()
+}
+
 def accessTokenInfo = contexts['oauth2'].accessToken.info
 logger.info("" + accessTokenInfo)
 

@@ -1,8 +1,8 @@
 services:
   openig:
-    #image: openidentityplatform/openig:latest
-    image: openig-test:latest
-    build: ./openig
+    image: openidentityplatform/openig:latest
+    # image: openig-test:latest
+    # build: ./openig
     container_name: openig
     volumes:
       - ./openig-config:/usr/local/openig-config:ro
@@ -17,12 +17,3 @@ services:
   app:
     image: test-web-server
     build: ./test-web-server
-    # ports:
-    #   - "8081:8080"
-        
-  spa:
-    image: caddy
-    volumes:
-      - ./spa/src:/usr/share/caddy/spa:ro
-    ports:
-      - "8082:80"

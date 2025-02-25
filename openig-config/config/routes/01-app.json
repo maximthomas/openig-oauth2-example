@@ -1,101 +1,25 @@
 {
-  "heap": [
-    {
-      "name": "Yandex",
-      "type": "Issuer",
+    "heap": [],
+    "handler": {
+      "type": "Chain",
       "config": {
-        "authorizeEndpoint": "https://oauth.yandex.ru/authorize",
-        "tokenEndpoint": "https://oauth.yandex.ru/token"
+        "filters": [
+          
+        ],
+        "handler": {
+          "name": "EndpointHandler",
+          "type": "DispatchHandler",
+          "config": {
+            "bindings": [
+              {
+                "handler": "ClientHandler",
+                "capture": "all",
+                "baseURI": "${system['endpoint.app']}"
+              }
+            ]
+          }
+        }
       }
     },
-    {
-      "comment": "To reuse client registrations, configure them in the parent route",
-      "name": "OAuth2RelyingParty",
-      "type": "ClientRegistration",
-      "config": {
-        "issuer": "Yandex",
-        "clientId": "${system['oauth.client_id']}",
-        "clientSecret": "${system['oauth.client_secret']}",
-        "scopes": [
-          "login:email"
-        ]
-      }
-    }
-  ],
-  "handler": {
-    "type": "Chain",
-    "config": {
-      "filters": [
-        {
-          "type": "OAuth2ClientFilter",
-          "config": {
-            "clientEndpoint": "/app",
-            "defaultLoginGoto": "/app",
-            "requireHttps": false,
-            "requireLogin": true,
-            "target": "${attributes.access_token}",
-            "failureHandler": {
-              "type": "StaticResponseHandler",
-              "config": {
-                "status": 500,
-                "reason": "Error",
-                "entity": "${attributes.access_token}"
-              }
-            },
-            "registrations": "OAuth2RelyingParty"
-          }
-        },
-        {
-          "type": "HeaderFilter",
-          "config": {
-            "messageType": "REQUEST",
-            "add": {
-              "Authorization": [
-                "Bearer ${attributes.access_token.access_token}"
-              ]
-            }
-          }
-        },
-        {
-          "name": "ProtectedResourceFilter",
-          "type": "OAuth2ResourceServerFilter",
-          "config": {
-            "tokenInfoEndpoint": "https://login.yandex.ru/info?format=jwt",
-            "accessTokenResolver": {
-              "type": "ScriptableAccessTokenResolver",
-              "config": {
-                "type": "application/x-groovy",
-                "file": "ResolveAccessToken.groovy"
-              }
-            },
-            "requireHttps": false,
-            "providerHandler": "ClientHandler",
-            "scopes": [],
-            "cacheExpiration": "2 minutes"
-          }
-        },
-        {
-          "name": "AuthorizationFilter",
-          "type": "ScriptableFilter",
-          "config": {
-            "type": "application/x-groovy",
-            "file": "Policy.groovy",
-            "args": {
-              "allowedEmails": "${system.allowedEmails}"
-            }
-          }
-        }
-      ],
-      "handler": {
-        "name": "UserInfoHandler",
-        "type":"StaticResponseHandler",
-        "config": {
-           "status": 200,
-           "entity": "<h1>email: ${contexts['oauth2'].accessToken.info['email']}, balance 10000 </h1>"
-        }
-      }
-    }
-  },
-  "condition": "${matches(request.uri.path, '^/app')}",
-  "baseURI": "http://openig.example.org:8080"
-}
+    "condition": "${matches(request.uri.path, '^/app')}"
+  }

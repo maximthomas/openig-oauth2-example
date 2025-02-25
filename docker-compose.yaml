@@ -14,3 +14,9 @@ services:
       - "8080:8080"
       - "5005:5005"
 
+  app:
+    image: caddy
+    volumes:
+      - ./app/src:/usr/share/caddy/app:ro
+    ports:
+      - "8082:80"

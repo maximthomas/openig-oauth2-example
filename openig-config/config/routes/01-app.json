@@ -29,15 +29,14 @@
         {
           "type": "OAuth2ClientFilter",
           "config": {
-            "clientEndpoint": "/oauth",
-            "defaultLoginGoto": "/oauth",
+            "clientEndpoint": "/app",
+            "defaultLoginGoto": "/app",
             "requireHttps": false,
             "requireLogin": true,
             "target": "${attributes.access_token}",
             "failureHandler": {
               "type": "StaticResponseHandler",
               "config": {
-                "comment": "Trivial failure handler for debugging only",
                 "status": 500,
                 "reason": "Error",
                 "entity": "${attributes.access_token}"
@@ -56,23 +55,47 @@
               ]
             }
           }
+        },
+        {
+          "name": "ProtectedResourceFilter",
+          "type": "OAuth2ResourceServerFilter",
+          "config": {
+            "tokenInfoEndpoint": "https://login.yandex.ru/info?format=jwt",
+            "accessTokenResolver": {
+              "type": "ScriptableAccessTokenResolver",
+              "config": {
+                "type": "application/x-groovy",
+                "file": "ResolveAccessToken.groovy"
+              }
+            },
+            "requireHttps": false,
+            "providerHandler": "ClientHandler",
+            "scopes": [],
+            "cacheExpiration": "2 minutes"
+          }
+        },
+        {
+          "name": "AuthorizationFilter",
+          "type": "ScriptableFilter",
+          "config": {
+            "type": "application/x-groovy",
+            "file": "Policy.groovy",
+            "args": {
+              "allowedEmails": "${system.allowedEmails}"
+            }
+          }
         }
       ],
       "handler": {
-        "name": "EndpointHandler",
-        "type": "DispatchHandler",
+        "name": "UserInfoHandler",
+        "type":"StaticResponseHandler",
         "config": {
-          "bindings": [
-            {
-              "handler": "ClientHandler",
-              "capture": "all",
-              "baseURI": "${system['endpoint.app']}"
-            }
-          ]
+           "status": 200,
+           "entity": "<h1>email: ${contexts['oauth2'].accessToken.info['email']}, balance 10000 </h1>"
         }
       }
     }
   },
-  "condition": "${matches(request.uri.path, '^/oauth')}",
+  "condition": "${matches(request.uri.path, '^/app')}",
   "baseURI": "http://openig.example.org:8080"
 }

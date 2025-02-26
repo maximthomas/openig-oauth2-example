@@ -1,5 +1,34 @@
 {
-  "heap": [],
+  "heap": [
+    {
+      "name": "UnAuthorizedHandler",
+      "type": "StaticResponseHandler",
+      "config": {
+        "status": 403,
+        "reason": "Forbidden",
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "entity": "{\"error\": \"forbidden\" }"
+      }
+    },
+    {
+      "name": "UnAuthenticatedHandler",
+      "type": "StaticResponseHandler",
+      "config": {
+        "status": 401,
+        "reason": "Unauthenticated",
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "entity": "{\"error\": \"unauthenticated\" }"
+      }
+    }
+  ],
   "handler": {
     "type": "Chain",
     "config": {
@@ -23,26 +52,33 @@
           }
         },
         {
-          "name": "AuthorizationFilter",
-          "type": "ScriptableFilter",
+          "name": "CheckContextAccessToken",
+          "type": "ConditionEnforcementFilter",
           "config": {
-            "type": "application/x-groovy",
-            "file": "policy.groovy",
-            "args": {
-              "allowedEmails": "${system.allowedEmails}"
-            }
+            "condition": "${not empty (contexts['oauth2'])}",
+            "failureHandler": "UnAuthenticatedHandler"
+          }
+        },
+        {
+          "name": "CheckAuthorizationPolicy",
+          "type": "ConditionEnforcementFilter",
+          "config": {
+            "condition": "${contains(system['allowedEmails'].split(','), contexts['oauth2'].accessToken.info.email)}",
+            "failureHandler": "UnAuthorizedHandler"
           }
         }
       ],
       "handler": {
         "name": "UserInfoHandler",
-        "type":"StaticResponseHandler",
+        "type": "StaticResponseHandler",
         "config": {
-           "status": 200,
-           "headers" : {
-            "Content-Type" : ["application/json"]
-           },
-           "entity": "{\"email\": \"${contexts['oauth2'].accessToken.info['email']}\", \"balance\": 10000 }"
+          "status": 200,
+          "headers": {
+            "Content-Type": [
+              "application/json"
+            ]
+          },
+          "entity": "{\"email\": \"${contexts['oauth2'].accessToken.info['email']}\", \"balance\": 10000 }"
         }
       }
     }

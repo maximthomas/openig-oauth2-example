@@ -7,7 +7,7 @@ import org.forgerock.json.jose.jws.SignedJwt
 logger.info("getting JWT with user info...")
 def httpRequest = new Request()
 httpRequest.method = "GET"
-httpRequest.uri = tokenInfoEndpoint
+httpRequest.uri = config.tokenInfoEndpoint.asString()
 httpRequest.headers['Authorization'] = "OAuth " + token
 def response = http.send(httpRequest).get(5, java.util.concurrent.TimeUnit.SECONDS)
 try {

@@ -55,7 +55,6 @@ window.onload = function () {
                 return;
             }
             const tokenData = await response.json();
-<<<<<<< HEAD
             const accessToken = tokenData.access_token;
             console.log('Access Token:', accessToken);
             getUserData(accessToken)
@@ -70,13 +69,5 @@ window.onload = function () {
         window.sessionStorage.removeItem("autoLogin");
         doLogin();
     }
-=======
-            console.log('Access Token:', tokenData.access_token);
-            getUserData(tokenData.accessToken)
-                        
-        } catch (error) {
-            console.error('Token exchange failed:', error);
-        }
-    }
->>>>>>> origin/access-token-exchange-backend
+
 }

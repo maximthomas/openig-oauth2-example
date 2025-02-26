@@ -52,7 +52,7 @@
           }
         },
         {
-          "name": "CheckContextAccessToken",
+          "name": "AuthenticationFilter",
           "type": "ConditionEnforcementFilter",
           "config": {
             "condition": "${not empty (contexts['oauth2'])}",
@@ -60,7 +60,7 @@
           }
         },
         {
-          "name": "CheckAuthorizationPolicy",
+          "name": "AuthorizationFilter",
           "type": "ConditionEnforcementFilter",
           "config": {
             "condition": "${contains(system['allowedEmails'].split(','), contexts['oauth2'].accessToken.info.email)}",

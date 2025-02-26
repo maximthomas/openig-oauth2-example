@@ -11,9 +11,7 @@ window.onload = function () {
 
     async function setUserData(userData) {
         document.getElementById('login').style.display = 'none';
-        
         document.getElementById('email').textContent = userData.email;
-        
         document.getElementById('profile').style.display = '';
     }
 
@@ -45,7 +43,6 @@ window.onload = function () {
 
     async function doLogin() {
         try {
-
             const response = await fetch("/oauth?goto=/app", {
                 redirect: 'manual'
             });

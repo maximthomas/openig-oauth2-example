@@ -7,7 +7,7 @@ services:
     volumes:
       - ./openig-config:/usr/local/openig-config:ro
     # environment:
-    #   CATALINA_OPTS: -Dopenig.base=/usr/local/openig-config -Doauth.client_id=<client_id> -Doauth.client_secret=<client_secret> -DallowedEmails=ivan.ivanov@yandex.ru -Dendpoint.app=http://app:8080      
+    #   CATALINA_OPTS: -Dopenig.base=/usr/local/openig-config -Doauth.client_id=<client_id> -Doauth.client_secret=<client_secret> -DallowedEmails=ivan.ivanov@yandex.ru -Dendpoint.app=http://app:80      
     env_file:
         - dev.env        
     ports:
@@ -18,5 +18,4 @@ services:
     image: caddy
     volumes:
       - ./app/src:/usr/share/caddy/app:ro
-    ports:
-      - "8082:80"
+      

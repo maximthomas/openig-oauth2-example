@@ -38,7 +38,6 @@ window.onload = function () {
             console.error('get user data failed:', error);
             setError("get user data failed: " + error);
         }
-
     }
 
     async function doLogin() {
@@ -66,5 +65,4 @@ window.onload = function () {
         window.sessionStorage.removeItem("autoLogin");
         doLogin();
     }
-
 }

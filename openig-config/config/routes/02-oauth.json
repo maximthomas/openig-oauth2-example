@@ -30,14 +30,13 @@
           "type": "OAuth2ClientFilter",
           "config": {
             "clientEndpoint": "/oauth",
-            "defaultLoginGoto": "/service",
+            "defaultLoginGoto": "/app",
             "requireHttps": false,
             "requireLogin": true,
             "target": "${attributes.access_token}",
             "failureHandler": {
               "type": "StaticResponseHandler",
               "config": {
-                "comment": "Trivial failure handler for debugging only",
                 "status": 500,
                 "reason": "Error",
                 "entity": "${attributes.access_token}"
@@ -45,32 +44,19 @@
             },
             "registrations": "OAuth2RelyingParty"
           }
-        },
-        {
-          "name": "AccessTokenEnrichFilter",
-          "type": "ScriptableFilter",
-          "config": {
-            "type": "application/x-groovy",
-            "file": "accessToken.groovy",
-            "args": {
-              "accessToken": "${attributes.access_token}"
-            }
-          }
-        },
-        {
-          "type": "StaticRequestFilter",
-          "config": {
-            "method": "GET",
-            "uri": "https://login.yandex.ru/info",
-            "headers": {
-              "Authorization": [
-                "OAuth ${attributes.access_token.access_token}"
-              ]
-            }
-          }
-        }
+        }        
       ],
-      "handler": "ClientHandler"
+      "handler": {
+        "name": "AccessTokenHandler",
+        "type":"StaticResponseHandler",
+        "config": {
+           "status": 200,
+           "headers" : {
+            "Content-Type" : ["application/json"]
+           },
+           "entity": "{ \"access_token\": \"${attributes.access_token.access_token}\" }"
+        }
+      }
     }
   },
   "condition": "${matches(request.uri.path, '^/oauth')}",

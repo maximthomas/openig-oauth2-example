@@ -1,3 +1,0 @@
-GET http://localhost:8080
-Accept: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJlbWFpbCI6Iml2YW4uaXZhbm92QHlhbmRleC5ydSJ9.Bs1F26rMRhii9f3OC7zm8YyKMpVpQ3EF1R0zAYC7fxI

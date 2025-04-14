@@ -3,5 +3,5 @@
 Run the project using the following command:
 
 ```
-docker compose up --build
+docker compose up
 ```
